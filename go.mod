@@ -1,4 +1,4 @@
-module github.com/Eigen438/cloudfirestore.git
+module github.com/Eigen438/cloudfirestore
 
 go 1.23
 

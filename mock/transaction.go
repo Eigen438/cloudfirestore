@@ -3,7 +3,7 @@ package mock
 import (
 	"context"
 
-	"github.com/Eigen438/cloudfirestore.git"
+	"github.com/Eigen438/cloudfirestore"
 	"github.com/stretchr/testify/mock"
 )
 

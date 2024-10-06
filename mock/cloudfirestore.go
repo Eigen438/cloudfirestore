@@ -26,7 +26,7 @@ import (
 	"context"
 
 	"cloud.google.com/go/firestore"
-	"github.com/Eigen438/cloudfirestore.git"
+	"github.com/Eigen438/cloudfirestore"
 	"github.com/stretchr/testify/mock"
 )
 
