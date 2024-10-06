@@ -26,6 +26,7 @@ import (
 	"context"
 
 	"cloud.google.com/go/firestore"
+	"github.com/Eigen438/dataprovider"
 )
 
 type innerTran struct {
@@ -33,15 +34,15 @@ type innerTran struct {
 	tran   *firestore.Transaction
 }
 
-func (i *innerTran) Create(ctx context.Context, data KeyGenerator) error {
+func (i *innerTran) Create(ctx context.Context, data dataprovider.KeyGenerator) error {
 	return i.tran.Create(i.client.Doc(data.GenerateKey(ctx)), data)
 }
 
-func (i *innerTran) Set(ctx context.Context, data KeyGenerator) error {
+func (i *innerTran) Set(ctx context.Context, data dataprovider.KeyGenerator) error {
 	return i.tran.Set(i.client.Doc(data.GenerateKey(ctx)), data)
 }
 
-func (i *innerTran) Get(ctx context.Context, data KeyGenerator) error {
+func (i *innerTran) Get(ctx context.Context, data dataprovider.KeyGenerator) error {
 	snapshot, err := i.tran.Get(i.client.Doc(data.GenerateKey(ctx)))
 	if err != nil {
 		return err
@@ -49,6 +50,6 @@ func (i *innerTran) Get(ctx context.Context, data KeyGenerator) error {
 	return snapshot.DataTo(data)
 }
 
-func (i *innerTran) Delete(ctx context.Context, data KeyGenerator) error {
+func (i *innerTran) Delete(ctx context.Context, data dataprovider.KeyGenerator) error {
 	return i.tran.Delete(i.client.Doc(data.GenerateKey(ctx)))
 }

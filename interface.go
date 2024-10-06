@@ -26,23 +26,20 @@ import (
 	"context"
 
 	"cloud.google.com/go/firestore"
+	"github.com/Eigen438/dataprovider"
 )
-
-type KeyGenerator interface {
-	GenerateKey(context.Context) string
-}
 
 type CloudFirestore interface {
 	// Create creates the document with the given data.
 	// It returns an error if a document with the same ID already exists.
-	Create(context.Context, KeyGenerator) error
+	Create(context.Context, dataprovider.KeyGenerator) error
 	// Delete deletes the document. If the document doesn't exist, it does nothing
 	// and returns no error.
-	Delete(context.Context, KeyGenerator) error
+	Delete(context.Context, dataprovider.KeyGenerator) error
 	// Get retrieves the document.
-	Get(context.Context, KeyGenerator) error
+	Get(context.Context, dataprovider.KeyGenerator) error
 	// Set creates or overwrites the document with the given data.
-	Set(context.Context, KeyGenerator) error
+	Set(context.Context, dataprovider.KeyGenerator) error
 
 	// Run transaction
 	RunTransaction(context.Context, func(context.Context, Transaction) error) error
@@ -63,11 +60,11 @@ type CloudFirestore interface {
 
 type Transaction interface {
 	// Create Pathable data in transaction
-	Create(context.Context, KeyGenerator) error
+	Create(context.Context, dataprovider.KeyGenerator) error
 	// Write/Set Pathable data in transaction
-	Set(context.Context, KeyGenerator) error
+	Set(context.Context, dataprovider.KeyGenerator) error
 	// Read/Get Pathable data in transaction
-	Get(context.Context, KeyGenerator) error
+	Get(context.Context, dataprovider.KeyGenerator) error
 	// Delete Pathable data in transaction
-	Delete(context.Context, KeyGenerator) error
+	Delete(context.Context, dataprovider.KeyGenerator) error
 }

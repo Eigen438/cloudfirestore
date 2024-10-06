@@ -27,6 +27,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/Eigen438/cloudfirestore"
+	"github.com/Eigen438/dataprovider"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -42,7 +43,7 @@ func New(m *mock.Mock, firestoreService cloudfirestore.CloudFirestore) cloudfire
 	}
 }
 
-func (i *inner) Create(ctx context.Context, data cloudfirestore.KeyGenerator) error {
+func (i *inner) Create(ctx context.Context, data dataprovider.KeyGenerator) error {
 	args := i.mock.Called(ctx, data)
 	if err := args.Error(0); err != nil {
 		return err
@@ -50,7 +51,7 @@ func (i *inner) Create(ctx context.Context, data cloudfirestore.KeyGenerator) er
 	return i.client.Create(ctx, data)
 }
 
-func (i *inner) Delete(ctx context.Context, data cloudfirestore.KeyGenerator) error {
+func (i *inner) Delete(ctx context.Context, data dataprovider.KeyGenerator) error {
 	args := i.mock.Called(ctx, data)
 	if err := args.Error(0); err != nil {
 		return err
@@ -58,7 +59,7 @@ func (i *inner) Delete(ctx context.Context, data cloudfirestore.KeyGenerator) er
 	return i.client.Delete(ctx, data)
 }
 
-func (i *inner) Get(ctx context.Context, data cloudfirestore.KeyGenerator) error {
+func (i *inner) Get(ctx context.Context, data dataprovider.KeyGenerator) error {
 	args := i.mock.Called(ctx, data)
 	if err := args.Error(0); err != nil {
 		return err
@@ -66,7 +67,7 @@ func (i *inner) Get(ctx context.Context, data cloudfirestore.KeyGenerator) error
 	return i.client.Get(ctx, data)
 }
 
-func (i *inner) Set(ctx context.Context, data cloudfirestore.KeyGenerator) error {
+func (i *inner) Set(ctx context.Context, data dataprovider.KeyGenerator) error {
 	args := i.mock.Called(ctx, data)
 	if err := args.Error(0); err != nil {
 		return err

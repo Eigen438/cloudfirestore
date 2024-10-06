@@ -28,6 +28,7 @@ import (
 	"sync"
 
 	"cloud.google.com/go/firestore"
+	"github.com/Eigen438/dataprovider"
 	"go.opentelemetry.io/otel"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -57,7 +58,7 @@ func NewWithDatabase(ctx context.Context, databaseID string, opts ...option.Clie
 	}, nil
 }
 
-func (i *inner) Create(ctx context.Context, data KeyGenerator) error {
+func (i *inner) Create(ctx context.Context, data dataprovider.KeyGenerator) error {
 	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Create("+reflect.TypeOf(data).String()+")")
 	defer span.End()
@@ -66,7 +67,7 @@ func (i *inner) Create(ctx context.Context, data KeyGenerator) error {
 	return err
 }
 
-func (i *inner) Delete(ctx context.Context, data KeyGenerator) error {
+func (i *inner) Delete(ctx context.Context, data dataprovider.KeyGenerator) error {
 	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Delete("+reflect.TypeOf(data).String()+")")
 	defer span.End()
@@ -75,7 +76,7 @@ func (i *inner) Delete(ctx context.Context, data KeyGenerator) error {
 	return err
 }
 
-func (i *inner) Get(ctx context.Context, data KeyGenerator) error {
+func (i *inner) Get(ctx context.Context, data dataprovider.KeyGenerator) error {
 	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Get("+reflect.TypeOf(data).String()+")")
 	defer span.End()
@@ -87,7 +88,7 @@ func (i *inner) Get(ctx context.Context, data KeyGenerator) error {
 	return ss.DataTo(data)
 }
 
-func (i *inner) Set(ctx context.Context, data KeyGenerator) error {
+func (i *inner) Set(ctx context.Context, data dataprovider.KeyGenerator) error {
 	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Set("+reflect.TypeOf(data).String()+")")
 	defer span.End()

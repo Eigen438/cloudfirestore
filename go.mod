@@ -4,6 +4,7 @@ go 1.23
 
 require (
 	cloud.google.com/go/firestore v1.17.0
+	github.com/Eigen438/dataprovider v1.0.0
 	github.com/stretchr/testify v1.9.0
 	go.opentelemetry.io/otel v1.30.0
 	google.golang.org/api v0.199.0
