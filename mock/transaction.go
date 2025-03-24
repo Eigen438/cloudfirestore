@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2024 Eigen
+// Copyright (c) 2025 Eigen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@ import (
 	"context"
 
 	"github.com/Eigen438/cloudfirestore"
-	"github.com/Eigen438/dataprovider"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -35,7 +34,7 @@ type innerTran struct {
 	tran cloudfirestore.Transaction
 }
 
-func (i *innerTran) Create(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *innerTran) Create(ctx context.Context, data any) error {
 	args := i.mock.Called(ctx, data)
 	err := args.Error(0)
 	if err != nil {
@@ -44,7 +43,7 @@ func (i *innerTran) Create(ctx context.Context, data dataprovider.KeyGenerator) 
 	return i.tran.Create(ctx, data)
 }
 
-func (i *innerTran) Set(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *innerTran) Set(ctx context.Context, data any) error {
 	args := i.mock.Called(ctx, data)
 	err := args.Error(0)
 	if err != nil {
@@ -53,7 +52,7 @@ func (i *innerTran) Set(ctx context.Context, data dataprovider.KeyGenerator) err
 	return i.tran.Set(ctx, data)
 }
 
-func (i *innerTran) Get(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *innerTran) Get(ctx context.Context, data any) error {
 	args := i.mock.Called(ctx, data)
 	err := args.Error(0)
 	if err != nil {
@@ -62,7 +61,7 @@ func (i *innerTran) Get(ctx context.Context, data dataprovider.KeyGenerator) err
 	return i.tran.Get(ctx, data)
 }
 
-func (i *innerTran) Delete(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *innerTran) Delete(ctx context.Context, data any) error {
 	args := i.mock.Called(ctx, data)
 	err := args.Error(0)
 	if err != nil {

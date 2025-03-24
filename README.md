@@ -27,7 +27,7 @@ type Book struct {
   Author string
 }
 
-func (b Book) GenerateKey(_ context.Context) string {
+func (b Book) Path(_ context.Context) string {
   return "books/" + b.ID
 }
 

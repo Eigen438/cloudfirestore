@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2024 Eigen
+// Copyright (c) 2025 Eigen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,10 @@ package cloudfirestore
 
 import (
 	"context"
+	"fmt"
+	"reflect"
 
 	"cloud.google.com/go/firestore"
-	"github.com/Eigen438/dataprovider"
 )
 
 type innerTran struct {
@@ -34,22 +35,38 @@ type innerTran struct {
 	tran   *firestore.Transaction
 }
 
-func (i *innerTran) Create(ctx context.Context, data dataprovider.KeyGenerator) error {
-	return i.tran.Create(i.client.Doc(data.GenerateKey(ctx)), data)
-}
-
-func (i *innerTran) Set(ctx context.Context, data dataprovider.KeyGenerator) error {
-	return i.tran.Set(i.client.Doc(data.GenerateKey(ctx)), data)
-}
-
-func (i *innerTran) Get(ctx context.Context, data dataprovider.KeyGenerator) error {
-	snapshot, err := i.tran.Get(i.client.Doc(data.GenerateKey(ctx)))
-	if err != nil {
-		return err
+func (i *innerTran) Create(ctx context.Context, data any) error {
+	rv := reflect.ValueOf(data)
+	if p, ok := rv.Interface().(Pathable); ok {
+		return i.tran.Create(i.client.Doc(p.Path(ctx)), data)
 	}
-	return snapshot.DataTo(data)
+	return fmt.Errorf("not implement Pathable")
 }
 
-func (i *innerTran) Delete(ctx context.Context, data dataprovider.KeyGenerator) error {
-	return i.tran.Delete(i.client.Doc(data.GenerateKey(ctx)))
+func (i *innerTran) Set(ctx context.Context, data any) error {
+	rv := reflect.ValueOf(data)
+	if p, ok := rv.Interface().(Pathable); ok {
+		return i.tran.Set(i.client.Doc(p.Path(ctx)), data)
+	}
+	return fmt.Errorf("not implement Pathable")
+}
+
+func (i *innerTran) Get(ctx context.Context, data any) error {
+	rv := reflect.ValueOf(data)
+	if p, ok := rv.Interface().(Pathable); ok {
+		snapshot, err := i.tran.Get(i.client.Doc(p.Path(ctx)))
+		if err != nil {
+			return err
+		}
+		return snapshot.DataTo(data)
+	}
+	return fmt.Errorf("not implement Pathable")
+}
+
+func (i *innerTran) Delete(ctx context.Context, data any) error {
+	rv := reflect.ValueOf(data)
+	if p, ok := rv.Interface().(Pathable); ok {
+		return i.tran.Delete(i.client.Doc(p.Path(ctx)))
+	}
+	return fmt.Errorf("not implement Pathable")
 }

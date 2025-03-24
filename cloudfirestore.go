@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2024 Eigen
+// Copyright (c) 2025 Eigen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@ package cloudfirestore
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"sync"
 
 	"cloud.google.com/go/firestore"
-	"github.com/Eigen438/dataprovider"
 	"go.opentelemetry.io/otel"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -58,43 +58,59 @@ func NewWithDatabase(ctx context.Context, databaseID string, opts ...option.Clie
 	}, nil
 }
 
-func (i *inner) Create(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *inner) Create(ctx context.Context, data any) error {
 	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Create("+reflect.TypeOf(data).String()+")")
 	defer span.End()
 
-	_, err := i.client.Doc(data.GenerateKey(ctx)).Create(ctx, data)
-	return err
+	rv := reflect.ValueOf(data)
+	if p, ok := rv.Interface().(Pathable); ok {
+		_, err := i.client.Doc(p.Path(ctx)).Create(ctx, data)
+		return err
+	}
+	return fmt.Errorf("not implement Pathable")
 }
 
-func (i *inner) Delete(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *inner) Delete(ctx context.Context, data any) error {
 	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Delete("+reflect.TypeOf(data).String()+")")
 	defer span.End()
 
-	_, err := i.client.Doc(data.GenerateKey(ctx)).Delete(ctx)
-	return err
+	rv := reflect.ValueOf(data)
+	if p, ok := rv.Interface().(Pathable); ok {
+		_, err := i.client.Doc(p.Path(ctx)).Delete(ctx)
+		return err
+	}
+	return fmt.Errorf("not implement Pathable")
 }
 
-func (i *inner) Get(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *inner) Get(ctx context.Context, data any) error {
 	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Get("+reflect.TypeOf(data).String()+")")
 	defer span.End()
 
-	ss, err := i.client.Doc(data.GenerateKey(ctx)).Get(ctx)
-	if err != nil {
-		return err
+	rv := reflect.ValueOf(data)
+	if p, ok := rv.Interface().(Pathable); ok {
+		ss, err := i.client.Doc(p.Path(ctx)).Get(ctx)
+		if err != nil {
+			return err
+		}
+		return ss.DataTo(data)
 	}
-	return ss.DataTo(data)
+	return fmt.Errorf("not implement Pathable")
 }
 
-func (i *inner) Set(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *inner) Set(ctx context.Context, data any) error {
 	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Set("+reflect.TypeOf(data).String()+")")
 	defer span.End()
 
-	_, err := i.client.Doc(data.GenerateKey(ctx)).Set(ctx, data)
-	return err
+	rv := reflect.ValueOf(data)
+	if p, ok := rv.Interface().(Pathable); ok {
+		_, err := i.client.Doc(p.Path(ctx)).Set(ctx, data)
+		return err
+	}
+	return fmt.Errorf("not implement Pathable")
 }
 
 func (i *inner) RunTransaction(ctx context.Context, f func(context.Context, Transaction) error) error {

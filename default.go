@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2024 Eigen
+// Copyright (c) 2025 Eigen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@ import (
 	"context"
 
 	"cloud.google.com/go/firestore"
-	"github.com/Eigen438/dataprovider"
 )
 
 var defaultInstance CloudFirestore
@@ -42,22 +41,22 @@ func Initialize(ctx context.Context) error {
 }
 
 // Create Pathable data
-func Create(ctx context.Context, data dataprovider.KeyGenerator) error {
+func Create(ctx context.Context, data Pathable) error {
 	return defaultInstance.Create(ctx, data)
 }
 
 // Write/Set Pathable data
-func Set(ctx context.Context, data dataprovider.KeyGenerator) error {
+func Set(ctx context.Context, data Pathable) error {
 	return defaultInstance.Set(ctx, data)
 }
 
 // Read/Get Pathable data
-func Get(ctx context.Context, data dataprovider.KeyGenerator) error {
+func Get(ctx context.Context, data Pathable) error {
 	return defaultInstance.Get(ctx, data)
 }
 
 // Delete Pathable data
-func Delete(ctx context.Context, data dataprovider.KeyGenerator) error {
+func Delete(ctx context.Context, data Pathable) error {
 	return defaultInstance.Delete(ctx, data)
 }
 

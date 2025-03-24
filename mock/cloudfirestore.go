@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2024 Eigen
+// Copyright (c) 2025 Eigen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,6 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/Eigen438/cloudfirestore"
-	"github.com/Eigen438/dataprovider"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -43,7 +42,7 @@ func New(m *mock.Mock, firestoreService cloudfirestore.CloudFirestore) cloudfire
 	}
 }
 
-func (i *inner) Create(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *inner) Create(ctx context.Context, data any) error {
 	args := i.mock.Called(ctx, data)
 	if err := args.Error(0); err != nil {
 		return err
@@ -51,7 +50,7 @@ func (i *inner) Create(ctx context.Context, data dataprovider.KeyGenerator) erro
 	return i.client.Create(ctx, data)
 }
 
-func (i *inner) Delete(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *inner) Delete(ctx context.Context, data any) error {
 	args := i.mock.Called(ctx, data)
 	if err := args.Error(0); err != nil {
 		return err
@@ -59,7 +58,7 @@ func (i *inner) Delete(ctx context.Context, data dataprovider.KeyGenerator) erro
 	return i.client.Delete(ctx, data)
 }
 
-func (i *inner) Get(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *inner) Get(ctx context.Context, data any) error {
 	args := i.mock.Called(ctx, data)
 	if err := args.Error(0); err != nil {
 		return err
@@ -67,7 +66,7 @@ func (i *inner) Get(ctx context.Context, data dataprovider.KeyGenerator) error {
 	return i.client.Get(ctx, data)
 }
 
-func (i *inner) Set(ctx context.Context, data dataprovider.KeyGenerator) error {
+func (i *inner) Set(ctx context.Context, data any) error {
 	args := i.mock.Called(ctx, data)
 	if err := args.Error(0); err != nil {
 		return err
