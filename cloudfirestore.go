@@ -34,6 +34,8 @@ import (
 	"google.golang.org/api/option"
 )
 
+var tracer = otel.Tracer("cloudfirestore")
+
 type inner struct {
 	client *firestore.Client
 }
@@ -59,7 +61,6 @@ func NewWithDatabase(ctx context.Context, databaseID string, opts ...option.Clie
 }
 
 func (i *inner) Create(ctx context.Context, data any) error {
-	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Create("+reflect.TypeOf(data).String()+")")
 	defer span.End()
 
@@ -72,7 +73,6 @@ func (i *inner) Create(ctx context.Context, data any) error {
 }
 
 func (i *inner) Delete(ctx context.Context, data any) error {
-	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Delete("+reflect.TypeOf(data).String()+")")
 	defer span.End()
 
@@ -85,7 +85,6 @@ func (i *inner) Delete(ctx context.Context, data any) error {
 }
 
 func (i *inner) Get(ctx context.Context, data any) error {
-	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Get("+reflect.TypeOf(data).String()+")")
 	defer span.End()
 
@@ -101,7 +100,6 @@ func (i *inner) Get(ctx context.Context, data any) error {
 }
 
 func (i *inner) Set(ctx context.Context, data any) error {
-	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Set("+reflect.TypeOf(data).String()+")")
 	defer span.End()
 
@@ -114,7 +112,6 @@ func (i *inner) Set(ctx context.Context, data any) error {
 }
 
 func (i *inner) RunTransaction(ctx context.Context, f func(context.Context, Transaction) error) error {
-	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Transaction/All")
 	defer span.End()
 
@@ -140,7 +137,6 @@ func (i *inner) CollectionGroup(collectionName string) firestore.Query {
 }
 
 func (i *inner) Sequence(ctx context.Context, q firestore.Query, f func(ctx context.Context, snapshot *firestore.DocumentSnapshot) error) (int, error) {
-	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	iter := q.Documents(ctx)
 	defer iter.Stop()
 
@@ -168,7 +164,6 @@ func (i *inner) Sequence(ctx context.Context, q firestore.Query, f func(ctx cont
 }
 
 func (i *inner) Run(ctx context.Context, q firestore.Query, concurrency int, f func(ctx context.Context, snapshot *firestore.DocumentSnapshot) error) (int, error) {
-	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	iter := q.Documents(ctx)
 	defer iter.Stop()
 
@@ -206,7 +201,6 @@ func (i *inner) Run(ctx context.Context, q firestore.Query, concurrency int, f f
 }
 
 func (i *inner) DeleteWithQuery(ctx context.Context, q firestore.Query, concurrency int) (int, error) {
-	tracer := otel.GetTracerProvider().Tracer("cloudfirestore")
 	ctx, span := tracer.Start(ctx, "Transaction/All")
 	defer span.End()
 
